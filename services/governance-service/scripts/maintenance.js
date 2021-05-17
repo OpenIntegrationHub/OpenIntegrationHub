@@ -63,7 +63,32 @@ if (testScript.includes('jest')) {
      }
 
 } else if (testScript.includes('mocha')) {
-  console.log('Coverage analysis for mocha test runner not yet supported')
+  console.log('Coverage analysis for mocha test runner');
+
+  testScript = `./node_modules/.bin/nyc ./node_modules/.bin/mocha ${testScript}`;
+
+  const coverageResponse = await exec(testScript);
+
+  console.log(coverageResponse);
+
+  if (coverageResponse.error) {
+    console.log('Coverage check did not pass successfully');
+    console.log(error);
+    return;
+  } else {
+     console.log('Coverage check finished')
+
+     // Extract coverage result from stdout
+     const statementCoverage = coverageResponse.stdout.match(/(All files)\s*\|\s*\d{0,2}.\d{0,2}/g)[0];
+     const coverage = statementCoverage.match(/\d*.\d*$/g);
+
+     if (Number(coverage) > coverageThreshold) {
+       console.log('Test coverage meets threshold!');
+       result.coverage = true;
+     } else {
+       console.log('Test coverage insufficient!')
+     }
+  }
 }
 
 // console.log(result);
