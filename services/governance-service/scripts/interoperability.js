@@ -32,9 +32,7 @@ try{
   return result
 }
 
-const allTriggers = Object.keys(component.triggers);
-
-const allTriggersAndActions = allTriggers.concat(Object.keys(component.actions));
+const allTriggersAndActions = Object.keys(component.triggers).concat(Object.keys(component.actions));
 
 for (let i = 0; i < allTriggersAndActions.length; i += 1) {
  if (!result.get) {
